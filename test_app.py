@@ -5,7 +5,7 @@ from app import app, fibonacci
 @pytest.fixture
 def client():
     """Create a test client for the Flask app."""
-    app.config['TESTING'] = True
+    app.config["TESTING"] = True
     with app.test_client() as client:
         yield client
 
@@ -37,47 +37,47 @@ class TestAPI:
     """Test the API endpoints."""
 
     def test_health_endpoint(self, client):
-        response = client.get('/health')
+        response = client.get("/health")
         assert response.status_code == 200
-        assert response.json['status'] == 'healthy'
+        assert response.json["status"] == "healthy"
 
     def test_fibonacci_endpoint_success(self, client):
-        response = client.get('/fibonacci?n=2')
+        response = client.get("/fibonacci?n=2")
         assert response.status_code == 200
-        assert response.json['n'] == 2
-        assert response.json['result'] == 1
+        assert response.json["n"] == 2
+        assert response.json["result"] == 1
 
     def test_fibonacci_endpoint_n_10(self, client):
-        response = client.get('/fibonacci?n=10')
+        response = client.get("/fibonacci?n=10")
         assert response.status_code == 200
-        assert response.json['n'] == 10
-        assert response.json['result'] == 55
+        assert response.json["n"] == 10
+        assert response.json["result"] == 55
 
     def test_fibonacci_endpoint_n_0(self, client):
-        response = client.get('/fibonacci?n=0')
+        response = client.get("/fibonacci?n=0")
         assert response.status_code == 200
-        assert response.json['result'] == 0
+        assert response.json["result"] == 0
 
     def test_missing_parameter(self, client):
-        response = client.get('/fibonacci')
+        response = client.get("/fibonacci")
         assert response.status_code == 400
-        assert 'error' in response.json
+        assert "error" in response.json
 
     def test_invalid_parameter_type(self, client):
-        response = client.get('/fibonacci?n=abc')
+        response = client.get("/fibonacci?n=abc")
         assert response.status_code == 400
-        assert 'error' in response.json
+        assert "error" in response.json
 
     def test_negative_parameter(self, client):
-        response = client.get('/fibonacci?n=-5')
+        response = client.get("/fibonacci?n=-5")
         assert response.status_code == 400
-        assert 'error' in response.json
+        assert "error" in response.json
 
     def test_parameter_too_large(self, client):
-        response = client.get('/fibonacci?n=100000')
+        response = client.get("/fibonacci?n=100000")
         assert response.status_code == 400
-        assert 'error' in response.json
+        assert "error" in response.json
 
     def test_not_found(self, client):
-        response = client.get('/nonexistent')
+        response = client.get("/nonexistent")
         assert response.status_code == 404
