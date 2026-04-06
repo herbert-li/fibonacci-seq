@@ -571,3 +571,29 @@ MIT License
 ## Support
 
 For issues or questions, please open an issue in the repository.
+
+## AI-Assisted Development
+
+This project was developed with assistance from **Claude Code** (claude.ai/code), Anthropic's official CLI tool for software development.
+
+**Areas where Claude Code contributed:**
+- Initial Flask application structure and Fibonacci algorithm implementation
+- Comprehensive test suite with pytest fixtures
+- Docker containerization and production deployment configuration
+- CI/CD pipeline setup with GitHub Actions
+- Documentation including this README, API specifications, and deployment guides
+- Alignment of Dockerfile configuration with ArgoCD deployment manifests
+
+**Development Process:**
+- All AI-generated code was thoroughly reviewed and tested
+- Implementation follows Python best practices and Flask conventions
+- Security considerations and input validation were carefully verified
+- Production deployment configurations were validated against real-world requirements
+
+**Code Quality Assurance:**
+- 100% test coverage maintained
+- All code passes linting (flake8) and formatting (black) checks
+- Security best practices implemented (non-root container, input validation, error handling)
+- Performance optimized with O(n) time and O(1) space complexity
+
+Claude Code served as a development accelerator while maintaining high code quality standards through human oversight and validation.
