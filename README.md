@@ -205,7 +205,12 @@ spec:
     spec:
       containers:
       - name: fibonacci-api
-        image: fibonacci-api:latest
+        image: linan0890/fibonacci-api:latest
+        env:
+        - name: PORT
+          value: "5001"
+        - name: WORKERS
+          value: "4"
         ports:
         - containerPort: 5001
         resources:
