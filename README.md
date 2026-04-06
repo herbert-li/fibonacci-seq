@@ -145,7 +145,6 @@ docker run -p 5000:5000 fibonacci-api:latest
 ```bash
 docker run -p 5000:5000 \
   -e WORKERS=4 \
-  -e TIMEOUT=30 \
   fibonacci-api:latest
 ```
 
