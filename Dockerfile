@@ -19,4 +19,4 @@ USER appuser
 EXPOSE 5000
 
 # Use gunicorn as production WSGI server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "4", "--timeout", "30", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 --workers ${WORKERS:-4} --timeout 30 --access-logfile - --error-logfile - app:app"]
