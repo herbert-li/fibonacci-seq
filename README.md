@@ -24,10 +24,10 @@ Computes the nth Fibonacci number.
 
 ```bash
 # F(2) = 1
-curl "http://localhost:5000/fibonacci?n=2"
+curl "http://localhost:5001/fibonacci?n=2"
 
 # F(10) = 55
-curl "http://localhost:5000/fibonacci?n=10"
+curl "http://localhost:5001/fibonacci?n=10"
 ```
 
 **Success Response (200 OK):**
@@ -99,14 +99,17 @@ pip install -r requirements.txt
 4. **Run the application:**
 
 ```bash
-# Development mode
+# Development mode (default port 5001)
 python app.py
 
+# Development mode with custom port
+PORT=8080 python app.py
+
 # Production mode with gunicorn
-gunicorn --bind 0.0.0.0:5000 --workers 4 app:app
+gunicorn --bind 0.0.0.0:5001 --workers 4 app:app
 ```
 
-The API will be available at `http://localhost:5000`
+The API will be available at `http://localhost:5001` (or your configured port)
 
 ### Testing
 
@@ -137,14 +140,23 @@ docker build -t fibonacci-api:latest .
 **Run the container:**
 
 ```bash
-docker run -p 5000:5000 fibonacci-api:latest
+docker run -p 5001:5001 fibonacci-api:latest
 ```
 
 **Run with environment variables:**
 
 ```bash
-docker run -p 5000:5000 \
+docker run -p 5001:5001 \
+  -e PORT=5001 \
   -e WORKERS=4 \
+  fibonacci-api:latest
+```
+
+**Run on a different port:**
+
+```bash
+docker run -p 8080:8080 \
+  -e PORT=8080 \
   fibonacci-api:latest
 ```
 
@@ -158,12 +170,13 @@ services:
   fibonacci-api:
     build: .
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
+      - PORT=5001
       - WORKERS=4
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -194,7 +207,7 @@ spec:
       - name: fibonacci-api
         image: fibonacci-api:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 5001
         resources:
           requests:
             memory: "128Mi"
@@ -205,13 +218,13 @@ spec:
         livenessProbe:
           httpGet:
             path: /health
-            port: 5000
+            port: 5001
           initialDelaySeconds: 10
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /health
-            port: 5000
+            port: 5001
           initialDelaySeconds: 5
           periodSeconds: 10
 
@@ -226,7 +239,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 5000
+    targetPort: 5001
   type: LoadBalancer
 ```
 
@@ -557,6 +570,25 @@ def get_fibonacci_redis(n):
 5. **Dependencies**: Regularly update dependencies for security patches
 6. **CORS**: Configure CORS headers if needed for web clients
 
+## Configuration
+
+The application supports the following environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `5001` | Port number for the application to listen on |
+| `WORKERS` | `4` | Number of gunicorn worker processes (production only) |
+
+**Examples:**
+
+```bash
+# Local development on custom port
+PORT=8080 python app.py
+
+# Docker with custom configuration
+docker run -p 8080:8080 -e PORT=8080 -e WORKERS=8 fibonacci-api:latest
+```
+
 ## Performance Characteristics
 
 - **Time complexity**: O(n) for computing F(n)
@@ -580,8 +612,11 @@ This project was developed with assistance from **Claude Code** (claude.ai/code)
 - Initial Flask application structure and Fibonacci algorithm implementation
 - Comprehensive test suite with pytest fixtures
 - Docker containerization and production deployment configuration
-- CI/CD pipeline setup with GitHub Actions
-- Documentation including this README, API specifications, and deployment guides
+- CI pipeline setup with GitHub Actions
+
+**Areas where human uplifted:**
+- Documentation including this README, and deployment guides
+- ArgoCD GitOps Integration
 - Alignment of Dockerfile configuration with ArgoCD deployment manifests
 
 **Development Process:**

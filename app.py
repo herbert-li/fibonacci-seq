@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 import logging
 import time
+import os
 
 app = Flask(__name__)
 
@@ -150,4 +151,5 @@ def internal_error(error):
 
 if __name__ == "__main__":
     # For development only - use a proper WSGI server in production
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    port = int(os.getenv("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=False)

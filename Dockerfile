@@ -15,8 +15,9 @@ COPY app.py .
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
 USER appuser
 
-# Expose port
-EXPOSE 5000
+# Expose port - this is documentation only, actual port is set via PORT env var (default: 5001)
+# Use docker run -p <host>:<container> -e PORT=<container> to run on different port
+EXPOSE 5001
 
 # Use gunicorn as production WSGI server
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:5000 --workers ${WORKERS:-4} --timeout 30 --access-logfile - --error-logfile - app:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-5001} --workers ${WORKERS:-4} --timeout 30 --access-logfile - --error-logfile - app:app"]
